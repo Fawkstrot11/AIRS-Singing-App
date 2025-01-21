@@ -3,7 +3,7 @@ import inputProcessor
 import noteSelector
 import toneGenerator
 
-notes = noteSelector.getNotes()
+notes = noteSelector.get_notes()
 
 toneGenerator.main(notes)
 
