@@ -7,7 +7,7 @@ import noteUtils
 
 def detect_notes(audio_file):
     """
-        Takes an audio file and return the detected pitches written as notes as a list.
+        Takes an audio file and returns the detected pitches written as notes in a list.
         :param audio_file: Path to the audio file to be loaded.
         :return notes: List of notes written (e.g. A#, B).
         """

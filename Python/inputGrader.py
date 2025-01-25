@@ -22,7 +22,7 @@ def input_length_normalize(input_notes):
 #Default strictness=3 means that no marks will be given for inputs 4 or more notes away from the original.
 def input_grading(original_tone, input_notes, strictness=3):
     """
-    Grades the input notes based on how closed it is to the original notes.
+    Grades the input notes based on how close it is to the original notes.
     :param original_tone: List of original notes.
     :param input_notes: List of input notes to be compared against the original notes.
     :param strictness: Indicates the strictness of the grading in terms of how many notes away from the original the input can be before it's marked as zero (int) default 3.
