@@ -1,3 +1,5 @@
+import numpy as np
+
 def hz_to_note_name(hz):
     A4 = 440.0
     notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
