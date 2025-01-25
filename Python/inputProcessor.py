@@ -6,6 +6,11 @@ import noteUtils
 
 
 def detect_notes(audio_file):
+    """
+        Takes an audio file and return the detected pitches written as notes as a list.
+        :param audio_file: Path to the audio file to be loaded.
+        :return notes: List of notes written (e.g. A#, B).
+        """
     # Load the audio file with librosa
     y, sr = librosa.load(audio_file)
 

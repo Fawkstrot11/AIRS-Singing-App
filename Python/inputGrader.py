@@ -3,6 +3,11 @@ import numpy as np
 import inputProcessor
 
 def input_length_normalize(input_notes):
+    """
+     Normalize the notes length.
+     :param input_notes: List of notes to be normalized.
+     :return: Normalized list of notes.
+     """
     x = 0
     output = []
     for note in input_notes:
@@ -14,10 +19,15 @@ def input_length_normalize(input_notes):
     return output
 
 
-# Strictness parameter indicates the strictness of the grading in terms of how many notes away from the original
-# the input can be before it's marked as zero. Default strictness=3 means that no marks will be given for inputs
-# 4 or more notes away from the original.
+#Default strictness=3 means that no marks will be given for inputs 4 or more notes away from the original.
 def input_grading(original_tone, input_notes, strictness=3):
+    """
+    Grades the input notes based on how closed it is to the original notes.
+    :param original_tone: List of original notes.
+    :param input_notes: List of input notes to be compared against the original notes.
+    :param strictness: Indicates the strictness of the grading in terms of how many notes away from the original the input can be before it's marked as zero (int) default 3.
+    :return: None (prints grades for each note and an average grade).
+    """
     notes = {'C' : 1, 'C#' : 2, 'D' : 3, 'D#' : 4, 'E' : 5, 'F' : 6, 'F#' : 7,
              'G' : 8, 'G#' : 9, 'A' : 10, 'A#' : 11, 'B': 12}
     grades = []

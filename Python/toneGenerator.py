@@ -4,6 +4,11 @@ from synthesizer import Synthesizer, Writer
 import numpy as np
 
 def generate_notes(notes, filename="output.wav"):
+    """
+    Generates an audio .WAV file using the musical notes list passed as a parameter.
+    :param notes: List of musical notes.
+    :param filename: Name of the file (string) to be created, y default the name is output.wav.
+    """
     # Create a Synthesizer object (with default sample rate)
     synth = Synthesizer()
 
