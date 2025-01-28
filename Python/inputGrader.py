@@ -26,7 +26,7 @@ def input_grading(original_tone, input_notes, strictness=3):
     :param original_tone: List of original notes.
     :param input_notes: List of input notes to be compared against the original notes.
     :param strictness: Indicates the strictness of the grading in terms of how many notes away from the original the input can be before it's marked as zero (int) default 3.
-    :return: None (prints grades for each note and an average grade).
+    :return: grades for each note.
     """
     notes = {'C' : 1, 'C#' : 2, 'D' : 3, 'D#' : 4, 'E' : 5, 'F' : 6, 'F#' : 7,
              'G' : 8, 'G#' : 9, 'A' : 10, 'A#' : 11, 'B': 12}
@@ -46,11 +46,4 @@ def input_grading(original_tone, input_notes, strictness=3):
             grades.append(1/(abs(og_value - input_value)+1))
     print("Your grade for each note was:", grades)
     print("Your average grade was:", np.mean(grades))
-
-
-
-def main(input_notes):
-    normalized_input = input_length_normalize(input_notes)
-    input_grading(normalized_input, normalized_input)
-
-main(inputProcessor.main())
+    return grades
