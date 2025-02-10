@@ -45,6 +45,17 @@ def create_tables(connection):
             FOREIGN KEY (user_id) REFERENCES users(id)
             FOREIGN KEY (exercise_id) REFERENCES exercises(id)
         );
+        
+        CREATE TABLE IF NOT EXISTS user_progress(
+            user_id INTEGER NOT NULL,
+            exercise_id INTEGER NOT NULL,
+            average_grade REAL DEFAULT 0,
+            attempt_count INTEGER DEFAULT 0,
+            last_attempt TEXT DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (user_id, exercise_id).
+            FOREIGN KEY (user_id) REFERENCES users(id),
+            FOREIGN KEY (exercise_id) REFERENCES exercises(id)
+        );
     """)
     connection.commit()
 
@@ -129,6 +140,18 @@ def get_grades_of_user(connection, user_id):
     """, (user_id,))
     return cursor.fetchall()
 
+def get_user_progress(connection, user_id):
+    """
+    Get the user progress.
+    :param connection: Connection to the database.
+    :param user_id: User id of the user progress being read. (integer)
+    :return: Tuple containing the user progress including average grade, number of attempts and date of last attempt.
+    """
+    cursor = connection.cursor()
+    cursor.execute("SELECT user_id, average_grade, attempt_count, last_attempt FROM user_progress WHERE user_id = ?",
+                   (user_id,))
+    return cursor.fetchone()
+
 #Delete operations
 def remove_user(connection, user_id):
     """
@@ -163,6 +186,17 @@ def remove_grade(connection, grade_id):
     """
     cursor = connection.cursor()
     cursor.execute("DELETE FROM grades WHERE id = ?", (grade_id,))
+    connection.commit()
+
+def remove_user_progress(connection, user_id):
+    """
+    Remove specified user progress.
+    :param connection: Connection to the database.
+    :param user_id: User ID whose progress is being deleted. (integer)
+    :return: None
+    """
+    cursor = connection.cursor()
+    cursor.execute("DELETE FROM user_progress WHERE user_id = ?", (user_id,))
     connection.commit()
 
 #Update operations
@@ -208,7 +242,46 @@ def update_grades(connection, grade_id, grade):
     cursor.execute("UPDATE grades SET name = ? WHERE id = ?", (grade, grade_id))
     connection.commit()
 
-#Debug function
+def update_user_progression(connection, user_id, exercise_id, new_grade):
+    """
+    Update the user progression as a new grade is added.
+    :param connection: Connection to the database.
+    :param user_id: ID of the user. (integer)
+    :param exercise_id: ID of teh exercise. (integer)
+    :param new_grade: New grade to be added. (float)
+    :return: None
+    """
+    cursor = connection.cursor()
+    cursor.execute("SELECT average_grade, attempt_count FROM user_progress WHERE user_id = ? AND exercise_id = ?",
+                   (user_id, exercise_id))
+    current_progress = cursor.fetchone()
+
+    new_average, new_attempts = calculate_progress(current_progress, new_grade)
+    date = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+
+    if current_progress:
+        cursor.execute("UPDATE user_progress SET average_grade = ?, attempt_count = ?, last_attempt = ? WHERE user_id = ? AND exercise_id ?",
+                       (new_average, new_attempts, date, user_id, exercise_id))
+    else:
+        cursor.execute("INSERT INTO user_progress (user_id, exercise_id, average_grade, attempt_count, last_attempt) VALUES (?, ?, ?, ?, ?)",
+                       (user_id, exercise_id, new_average, new_attempts, date))
+    connection.commit()
+
+
+#Extra functions
+def calculate_progress(progress, new_grade):
+    """
+    Calculates the new average of grades and new number of attempts according to the information provided.
+    :param progress: Tuple that contains the old average and old number of attempts, gained from a query.
+    :param new_grade: The new grade to be used in the calculations. (float)
+    :return: A new average grade and a new number of attempts. (integer), (float)
+    """
+    old_average_grade, old_attempts = progress or (0,0) #Default 0 0 if None is passed
+    new_attempts = old_attempts + 1
+    new_average = ((old_average_grade * old_attempts) + new_grade) / new_attempts
+    return new_average, new_attempts
+
+#Debug functions
 def drop_all_tables(connection):
     """
     Drop all tables existing in the database.
@@ -219,6 +292,7 @@ def drop_all_tables(connection):
         DROP TABLE IF EXISTS grades;
         DROP TABLE IF EXISTS users;
         DROP TABLE IF EXISTS exercises;
+        DROP TABLE IF EXISTS user_progress;
     """)
     connection.commit()
 
