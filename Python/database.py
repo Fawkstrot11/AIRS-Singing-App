@@ -372,13 +372,39 @@ def drop_all_tables(connection):
     :param connection: Connection to the database.
     :return: None
     """
-    connection.executescript("""
-        DROP TABLE IF EXISTS grades;
-        DROP TABLE IF EXISTS users;
-        DROP TABLE IF EXISTS exercises;
-        DROP TABLE IF EXISTS user_progress;
-    """)
-    connection.commit()
+    try:
+        cursor = connection.cursor()
+        cursor.executescript("""
+            DROP TABLE IF EXISTS grades;
+            DROP TABLE IF EXISTS users;
+            DROP TABLE IF EXISTS exercises;
+            DROP TABLE IF EXISTS user_progress;
+        """)
+        connection.commit()
+    except sqlite3.Error as err:
+        print(f"Error updating user progress: {err}")
+    finally:
+        cursor.close()
+
+def debug_script(connection, query, values = None, fetch = False):
+    """
+    Executes any query desired as long as it is valid.
+    :param fetch: If true it returns a fetched. (bool) Optional, defaults False
+    :param values: Any values taken as a Tuple. Optional, defaults None
+    :param connection: Connection to the database.
+    :param query: query to be executed, can be any SQL query. (string)
+    :return: None
+    """
+    try:
+        cursor = connection.cursor()
+        cursor.execute(query, values or ())
+        if fetch:
+            return cursor.fetchall #If anyone needs fetchone or fetchmany um just change this idk
+    except sqlite3.Error as err:
+        print(f"Error updating user progress: {err}")
+        return None
+    finally:
+        cursor.close()
 
 #Simple Testing
 if __name__ == '__main__':
