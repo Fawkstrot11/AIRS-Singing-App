@@ -1,10 +1,10 @@
 # picks the notes to be used for a tone sequence. should, at some point, be adaptive.
 import random
 import noteUtils
-from Python.noteUtils import note_name_to_hz
+from noteUtils import note_name_to_hz
 
 
-def get_notes(sequence_length, lower_bound=0, upper_bound=120, step=1):
+def get_notes(sequence_length, lower_bound=40, upper_bound=80, step=1):
     """
     Picks the notes to be used for a tone sequence.
     :param sequence_length: The desired number of notes.
@@ -17,7 +17,7 @@ def get_notes(sequence_length, lower_bound=0, upper_bound=120, step=1):
     seed = random.randint(lower_bound, upper_bound)
     octave = seed//12
     letter = seed%12
-    output = [note_name_to_hz(notes[letter] + str(octave))]
+    output = [notes[letter] + str(octave)]
     for i in range(sequence_length-1):
         next_note = random.randint(-1, 1) * step
         if octave*12 + letter + next_note < lower_bound or octave*12 + letter + next_note >= upper_bound:
@@ -30,7 +30,8 @@ def get_notes(sequence_length, lower_bound=0, upper_bound=120, step=1):
             letter = (letter + next_note) % 12
         else:
             letter += next_note
-        output.append(note_name_to_hz(notes[letter] + str(octave)))
+        output.append((notes[letter] + str(octave)))
+    print("Output:", output)
     return output
 
 # TODO: add some error checking between the bounds and the step size

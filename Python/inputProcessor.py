@@ -31,16 +31,20 @@ def detect_notes(audio_file):
         pitch.append(pitches[index, t])  # Store the pitch (frequency) corresponding to that index
 
     notes = []
+    hzs = []
     for i in pitch:
+        if (i == 0 ): # IMPORTANT! Keeps any "Nones" from entering, but will hide all gaps.
+            continue
         notes.append(noteUtils.hz_to_note_name(i))
+        hzs.append(i)
 
     # Return the detected pitches
-    return notes
+    return notes, hzs
 
 
 def main():
     # Test with an audio file
-    audio_file = "output.wav"
+    audio_file = "input.wav"
     notes = detect_notes(audio_file)
     print("Detected Notes:", notes)
     return notes

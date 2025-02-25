@@ -2,6 +2,7 @@
 
 from synthesizer import Synthesizer, Writer
 import numpy as np
+import noteUtils
 
 def generate_notes(notes, filename="output.wav"):
     """

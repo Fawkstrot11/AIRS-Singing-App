@@ -28,3 +28,40 @@ def note_name_to_hz(note):
     distance = (octave - 4)*12 + notes[letter]
     hz = A4 * (2**(1/12)) ** distance
     return round(hz, 3)
+
+
+def note_all_to_hz(notes):
+    output = []
+    for i in notes:
+        output.append(note_name_to_hz(i))
+    return output
+
+
+def hz_all_to_notes(notes):
+    output = []
+    for i in notes:
+        output.append(hz_to_note_name(i))
+    return output
+
+def note_to_order(note): #where A0 is 0 and B9 is 119
+    notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+    letter = note[:-1]
+    octave = int(note[-1])
+    return notes.index(letter)+octave*12
+
+def order_to_note(number):
+    notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+    octave = number//12
+    letter = notes[number%12]
+    return letter + str(octave)
+
+def order_range(notes):
+    min = 120
+    max = 0
+    for i in notes:
+        val = note_to_order(i)
+        if val > max:
+            max = val
+        if val < min:
+            min = val
+    return min, max

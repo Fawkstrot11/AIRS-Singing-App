@@ -2,15 +2,11 @@
 import inputProcessor
 import noteSelector
 import toneGenerator
-
-notes = noteSelector.get_notes()
-
-toneGenerator.main(notes)
-
-read_notes = inputProcessor.main()
-
-# do grading here
-
-# produce the cool graphic
+import noteUtils
+import outputFormatter
+import interface
+import inputGrader
 
 
+
+interface.runInterface()
