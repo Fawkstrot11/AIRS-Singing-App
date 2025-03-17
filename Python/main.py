@@ -1,16 +1,18 @@
-# The structure that calls all the parts in sequence. This is subject to change if necessary (especially whether input should be read here or in the web portion)
-import inputProcessor
-import noteSelector
-import toneGenerator
+import random, part1, part2, database
+import shutil
 
-notes = noteSelector.get_notes()
+# Go run the database main file first to make sure a database.... exists.
+conn = database.create_connection("airs_app.db")
 
-toneGenerator.main(notes)
+user_id = 1 # should be whoever the user is. 1 is John, for testing.
 
-read_notes = inputProcessor.main()
-
-# do grading here
-
-# produce the cool graphic
+id = random.randint(1000,10000)
+sequence = part1.execute(id)
+# tones generated. go get the audio.
 
 
+shutil.copyfile("C Single Note.mp3", str(id)+".mp3")
+
+# assume the audio is gotten now. Must be (id.mp3)
+grade = part2.execute(id, sequence)
+print(grade[0])
