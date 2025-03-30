@@ -573,7 +573,6 @@ if __name__ == '__main__':
     conn = create_connection(DB_NAME)
     create_tables(conn)
 
-<<<<<<< Updated upstream
     #Adding
     add_user(conn, "John")
     add_exercise(conn, "Test", "Testing insertion")
@@ -581,28 +580,6 @@ if __name__ == '__main__':
     add_grade(conn, 1, 1, 54)
     add_grade(conn, 1, 1, 87)
     add_grade(conn, 1, 1, 45)
-=======
-    if sent:
-        add_user(conn, "John", "test")
-        add_exercise(conn, "Test", "Testing insertion")
-        add_grade(conn, 1, 1, 59)
-        add_grade(conn, 1, 1, 54)
-        add_grade(conn, 1, 1, 87)
-        add_grade(conn, 1, 1, 45)
-        sent = False
->>>>>>> Stashed changes
-
-    #Print Results
-    print("Users: ", get_users(conn))
-    print("Exercise: ", get_exercises(conn))
-    print("Grade for user 1: ", get_grades_of_user(conn, 1))
-    print("User progression: ", get_user_progress(conn, 1))
-
-    #Remove
-    remove_grade(conn, 1)
-    remove_user_progress(conn, 1)
-    remove_exercise(conn, 1)
-    remove_user(conn, 1)
 
 
     #Print Results
@@ -610,6 +587,19 @@ if __name__ == '__main__':
     print("Exercise: ", get_exercises(conn))
     print("Grade for user 1: ", get_grades_of_user(conn, 1))
     print("User progression: ", get_user_progress(conn, 1))
+    #
+    # #Remove
+    # remove_grade(conn, 1)
+    # remove_user_progress(conn, 1)
+    # remove_exercise(conn, 1)
+    # remove_user(conn, 1)
+    #
+    #
+    # #Print Results
+    # print("Users: ", get_users(conn))
+    # print("Exercise: ", get_exercises(conn))
+    # print("Grade for user 1: ", get_grades_of_user(conn, 1))
+    # print("User progression: ", get_user_progress(conn, 1))
 
 
 
