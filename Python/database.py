@@ -1,5 +1,6 @@
 import sqlite3
 from datetime import datetime, timezone
+import random
 
 #Database name if it does not exist it will be created
 DB_NAME = "airs_app.db"
@@ -27,6 +28,8 @@ def create_tables(connection):
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
+            password TEXT NOT NULL,
+            theme TEXT NOT NULL DEFAULT 'light',
             created_at TEXT DEFAULT CURRENT_TIMESTAMP
         );
         
@@ -56,14 +59,25 @@ def create_tables(connection):
             FOREIGN KEY (user_id) REFERENCES users(id),
             FOREIGN KEY (exercise_id) REFERENCES exercises(id)
         );
+        
+        CREATE TABLE IF NOT EXISTS user_note_scores(
+            user_id INTEGER NOT NULL,
+            note_name TEXT NOT NULL,
+            success_count INTEGER DEFAULT 0,
+            attempt_count INTEGER DEFAULT 0,
+            PRIMARY KEY (user_id, note_name),
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        );
     """)
     connection.commit()
     cursor.close()
 
 #Insertion operations
-def add_user(connection, name):
+def add_user(connection, name, password, theme = "light"):
     """
-    Adds a new user passing the name and getting the time it was created and adds it to the database.
+    Adds a new user passing the name, password, theme, and getting the time it was created and adds it to the database.
+    :param theme: Theme of the app. (string)
+    :param password: Password of the user. (string)
     :param connection: Connection to the database.
     :param name: Name of the user. (string)
     :return: None
@@ -72,8 +86,8 @@ def add_user(connection, name):
         cursor = connection.cursor()
         #So datetime.utcnow is going to be removed at some point so better to use the following code
         date = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
-        cursor.execute("INSERT INTO users (name, created_at) VALUES (?, ?)",
-                       (name, date))
+        cursor.execute("INSERT INTO users (name, password, theme, created_at) VALUES (?, ?, ?, ?)",
+                       (name, password, theme, date))
         connection.commit()
     except sqlite3.Error as err:
         print(f"Database Error: {err}")
@@ -197,6 +211,28 @@ def get_user_progress(connection, user_id):
     finally:
         cursor.close()
 
+def get_user_notes_scores(connection, user_id):
+    """
+    Get the user notes of the user based on the user id. Otherwise, returns None
+    :param connection: Connection to the database.
+    :param user_id: User id of the user scores per note being read. (integer)
+    :return: Data of all the notes in a list of tuples, or None
+    """
+    try:
+        cursor = connection.cursor()
+        cursor.execute("""
+            SELECT note_name, success_count, attempt_count FROM user_note_scores
+            WHERE user_id = ?
+        """, (user_id,))
+        data = cursor.fetchall()
+        cursor.close()
+        return data
+    except sqlite3.Error as err:
+        print(f"Error getting the user scores of each notes: {err}")
+        return None
+    finally:
+        cursor.close()
+
 #Delete operations
 def remove_user(connection, user_id):
     """
@@ -261,6 +297,39 @@ def remove_user_progress(connection, user_id):
         connection.commit()
     except sqlite3.Error as err:
         print(f"Error removing user progress: {err}")
+    finally:
+        cursor.close()
+
+def remove_user_note_score(connection, user_id, note_name):
+    """
+    Removes the scores of the specific note associated to the user_id.
+    :param connection: Connection to the database.
+    :param user_id: User ID whose score of the specified note are being deleted. (integer)
+    :param note_name: The note which is going to be deleted. (string)
+    :return: None
+    """
+    try:
+        cursor = connection.cursor()
+        cursor.execute("DELETE FROM user_note_scores WHERE user_id = ? AND note_name = ?", (user_id, note_name))
+        connection.commit()
+    except sqlite3.Error as err:
+        print(f"Error removing the scores of the note: {err}")
+    finally:
+        cursor.close()
+
+def remove_all_user_scores(connection, user_id):
+    """
+    Removes all the scores associated to the user.
+    :param connection: Connection to the database.
+    :param user_id:
+    :return: None
+    """
+    try:
+        cursor = connection.cursor()
+        cursor.execute("DELETE FROM user_note_score WHERE user_id = ?", (user_id,))
+        connection.commit()
+    except sqlite3.Error as err:
+        print(f"Error removing the scores all the notes: {err}")
     finally:
         cursor.close()
 
@@ -352,6 +421,44 @@ def update_user_progression(connection, user_id, exercise_id, new_grade):
     finally:
         cursor.close()
 
+def update_user_note_score(connection, user_id, note_name, success):
+    """
+    Updates the attempts and success of the note if the user hit it or creates the row if the note has never been
+    attempted.
+    :param connection: Connection to the database.
+    :param user_id: ID of the user. (integer)
+    :param note_name: Name of the note to be selected. (string)
+    :param success: If the note was successfully hit. (integer)
+    :return: None
+    """
+    try:
+        cursor = connection.cursor()
+        cursor.execute("""
+            SELECT success_count, attempt_count FROM user_note_scores
+            WHERE user_id = ? AND note_name = ?
+        """, (user_id, note_name))
+        result = cursor.fetchone()
+        if result:
+            success_count, attempt_count = result
+            if success:
+                success_count += 1
+            attempt_count += 1
+            cursor.execute("""
+                UPDATE user_note_scores SET success_count = ?, attempt_count = ?
+                WHERE user_id = ? AND note_name = ?
+            """, (success_count, attempt_count, user_id, note_name))
+        else:
+            cursor.execute("""
+                INSERT INTO user_note_scores (user_id, note_name, success_count, attempt_count)
+                VALUES (?, ?, ?, ?)
+            """, (user_id, note_name, 1 if success else 0, 1))
+        connection.commit()
+    except sqlite3.Error as err:
+        print(f"Error updating user scores per note: {err}")
+    finally:
+        cursor.close()
+
+
 #Extra functions
 def calculate_progress(progress, new_grade):
     """
@@ -406,6 +513,60 @@ def debug_script(connection, query, values = None, fetch = False):
     finally:
         cursor.close()
 
+#Leaving this here just in case but prob not needed
+def verify_user(connection, name, password):
+    """
+    Verifies the user if the password matches and returns the user_id.
+    :param connection: Connection to the database.
+    :param name: Name of the user. (string)
+    :param password: Password of the user. (string)
+    :return: user_id (integer) or None where no match for the password is found
+    """
+    try:
+        cursor = connection.cursor()
+        cursor.execute("SELECT id, password FROM users WHERE name = ?", (name,))
+        result = cursor.fetchone()
+        cursor.close()
+        if result:
+            user_id, stored_password =  result
+            if password == stored_password:
+                return user_id
+            return None
+    except sqlite3.Error as err:
+        print(f"Error retrieving the information: {err}")
+
+def get_biased_notes_for_user(connection, user_id, k=8, pitch_range=(48, 84)):
+    """
+    Returns the biased notes for the user to heat depending on the notes the user is good at.
+    :param connection: Connection to the database.
+    :param user_id: ID of the user. (integer)
+    :param k: Number of notes to be selected, default is 8. (integer)
+    :param pitch_range: Range of the pitch to be selected from, given in MIDI numbers. Tuple of integers
+    :return: Biased notes of k notes based on the weights calculated after each exercise.
+    """
+    note_scores_raw = get_user_notes_scores(connection, user_id)
+    note_scores = {n: (s, a) for n, s, a in note_scores_raw}
+
+    names = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+    all_notes = []
+    note_weights = []
+
+    #Build all valid notes in range
+    for midi in range(*pitch_range):
+        note = names[midi % 12] + str(midi // 12)
+        all_notes.append(note)
+
+    #Compute final weights
+    for note in all_notes:
+        s, a = note_scores.get(note, (0, 0))
+        acc = s / a if a > 0 else 0.05
+        weight = min(max(acc, 0.05), 0.95) + 0.01
+        note_weights.append(weight)
+
+    selected = random.choices(all_notes, weights=note_weights, k=k)
+    return selected
+
+
 #Simple Testing
 if __name__ == '__main__':
     #Creation
@@ -420,24 +581,25 @@ if __name__ == '__main__':
     add_grade(conn, 1, 1, 87)
     add_grade(conn, 1, 1, 45)
 
-    #Print Results
-    print("Users: ", get_users(conn))
-    print("Exercise: ", get_exercises(conn))
-    print("Grade for user 1: ", get_grades_of_user(conn, 1))
-    print("User progression: ", get_user_progress(conn, 1))
-
-    #Remove
-    remove_grade(conn, 1)
-    remove_user_progress(conn, 1)
-    remove_exercise(conn, 1)
-    remove_user(conn, 1)
-
 
     #Print Results
     print("Users: ", get_users(conn))
     print("Exercise: ", get_exercises(conn))
     print("Grade for user 1: ", get_grades_of_user(conn, 1))
     print("User progression: ", get_user_progress(conn, 1))
+    #
+    # #Remove
+    # remove_grade(conn, 1)
+    # remove_user_progress(conn, 1)
+    # remove_exercise(conn, 1)
+    # remove_user(conn, 1)
+    #
+    #
+    # #Print Results
+    # print("Users: ", get_users(conn))
+    # print("Exercise: ", get_exercises(conn))
+    # print("Grade for user 1: ", get_grades_of_user(conn, 1))
+    # print("User progression: ", get_user_progress(conn, 1))
 
 
 
