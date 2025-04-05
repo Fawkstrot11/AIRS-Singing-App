@@ -30,6 +30,7 @@
           border: none;
         }
       </style>
+      <script src="/scripts/themes.js"></script>
 </head>
 <body>
     <header>
@@ -80,6 +81,29 @@
                 </script>
               </body>
         </section>
+        <select id="theme-switcher" style="margin: 10px;">
+            <option value="standard">Standard</option>
+            <option value="princess">Princess</option>
+            <option value="rock">Rock</option>
+            <!-- Add more options as needed -->
+        </select>
+        <script>
+            // Set the dropdown value to the current cookie
+            function getCookie(name) {
+                const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+                return match ? decodeURIComponent(match[2]) : null;
+            }
+        
+            const switcher = document.getElementById("theme-switcher");
+            const currentStyle = getCookie("style") || "standard";
+            switcher.value = currentStyle;
+        
+            switcher.addEventListener("change", function () {
+                document.cookie = `style=${this.value}; path=/; max-age=31536000`; // 1 year
+                location.reload();
+            });
+        </script>
+                
     </main>
 
 </body>
