@@ -5,6 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Basic Template</title>
     <link rel="stylesheet" href="../styles.css">
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #121212;
+
+          padding: 20px;
+        }
+        select {
+          padding: 8px;
+          font-size: 16px;
+        }
+        .video-container {
+          display: none;
+          margin-top: 20px;
+        }
+        .video-container.active {
+          display: block;
+        }
+        iframe {
+          width: 100%;
+          max-width: 640px;
+          height: 360px;
+          border: none;
+        }
+      </style>
 </head>
 <body>
     <header>
@@ -18,15 +43,42 @@
     <main>
         <!--Little fixes to the positioning, might throw these into styles.css at some point.-->
         <section>
-            <p>
-                This area will contain a media player for clips selected by the user/teacher. This has not been implemented yet.
-            </p>
-            <p>
-                Press the button below or the arrow in the top-left to return to the home screen. 
-            </p>
-            <a href="../index.html">
-                <button>Proceed</button>
-            </a>
+            <body>
+
+                <h2>Select a Video:</h2>
+                <select id="videoSelector">
+                  <option value="">-- Choose a video --</option>
+                  <option value="video1">Taylor Swift Interview</option>
+                  <option value="video2">American Idol Winner</option>
+                  <option value="video3">Career Opportunities</option>
+                </select>
+              
+                <div id="video1" class="video-container">
+                  <iframe src="https://www.youtube.com/embed/ULgGwEdlZNc" allowfullscreen></iframe>
+                </div>
+              
+                <div id="video2" class="video-container">
+                  <iframe src="https://www.youtube.com/embed/EWkT25wIEJs" allowfullscreen></iframe>
+                </div>
+              
+                <div id="video3" class="video-container">
+                  <iframe src="https://www.youtube.com/embed/vDU5VwszYHM" allowfullscreen></iframe>
+                </div>
+              
+                <script>
+                  const selector = document.getElementById('videoSelector');
+                  const containers = document.querySelectorAll('.video-container');
+              
+                  selector.addEventListener('change', function () {
+                    containers.forEach(container => container.classList.remove('active'));
+                    const selectedId = this.value;
+                    if (selectedId) {
+                      const selectedVideo = document.getElementById(selectedId);
+                      if (selectedVideo) selectedVideo.classList.add('active');
+                    }
+                  });
+                </script>
+              </body>
         </section>
     </main>
 
