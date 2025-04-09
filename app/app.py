@@ -1,7 +1,7 @@
 # Imports
 import os
 
-from flask import Flask, render_template, redirect, request, jsonify, send_from_directory, url_for
+from flask import Flask, render_template, redirect, request, jsonify, send_from_directory, url_for, send_file
 from flask_scss import Scss
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -86,6 +86,17 @@ def micIndex():
 @app.route('/watch')
 def watch():
     return render_template('watch.html')
+
+@app.route('/download_db')
+def download_db():
+    try:
+        # Define the path to the file
+        file_path = static_dir = os.path.join(project_root, "app", 'airs_app.db')
+
+        # Send the file to the user
+        return send_file(file_path, as_attachment=True)
+    except Exception as e:
+        return f"Error: {str(e)}", 500
 
 # Catch-all for 404 errors and redirect to index
 @app.errorhandler(404)
