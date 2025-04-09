@@ -1,9 +1,6 @@
 # The structure that calls all the parts in sequence. This is subject to change if necessary (especially whether
 # input should be read here or in the web portion)
-import .inputProcessor
-import .noteSelector
-import .database
-import .toneGenerator
+from . import inputProcessor, noteSelector, database, toneGenerator
 import os
 
 #Luke : needed to import OS so it could put the audio where it needs to go

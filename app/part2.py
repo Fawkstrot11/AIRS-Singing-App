@@ -1,6 +1,6 @@
 import os
 
-import .inputProcessor, .inputGrader, .outputFormatter, .noteUtils, .database
+from . import inputProcessor, inputGrader, outputFormatter, noteUtils, database
 
 def execute(temp_id, target, uid=1):
     output = target # ['C4', "C5"]
