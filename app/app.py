@@ -1,7 +1,7 @@
 # Imports
 import os
 
-from flask import Flask, render_template, redirect, request, jsonify, send_from_directory
+from flask import Flask, render_template, redirect, request, jsonify, send_from_directory, url_for
 from flask_scss import Scss
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -87,6 +87,10 @@ def micIndex():
 def watch():
     return render_template('watch.html')
 
+# Catch-all for 404 errors and redirect to index
+@app.errorhandler(404)
+def page_not_found(e):
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True)

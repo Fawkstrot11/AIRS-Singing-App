@@ -41,7 +41,6 @@ jupyter_core==5.7.2
 kombu==5.5.2
 lazy_loader==0.4
 librosa==0.11.0
-llvmlite==0.44.0
 MarkupSafe==3.0.2
 matplotlib==3.10.1
 moviepy==2.1.2
