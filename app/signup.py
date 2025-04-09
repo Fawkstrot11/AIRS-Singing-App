@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, make_response
 from werkzeug.security import generate_password_hash
-from database import signup as signup_user
+from .database import signup as signup_user
 import random
 
 # Create a Blueprint for login

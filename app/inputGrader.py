@@ -1,7 +1,7 @@
 # Take the user's audio and compare it to the target. Note that, currently, output lists are much longer than the target.
 import numpy as np
 import math
-import noteUtils
+import .noteUtils
 
 def input_length_normalize(input_notes):
     """

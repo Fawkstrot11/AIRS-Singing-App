@@ -5,12 +5,12 @@ from flask import Flask, render_template, redirect, request, jsonify, send_from_
 from flask_scss import Scss
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from login import login_bp
-from signup import signup_bp
-from part1_routes import part1_bp
-from challenge import challenge_bp
-from results import results_bp
-from review import review_bp
+from .login import login_bp
+from .signup import signup_bp
+from .part1_routes import part1_bp
+from .challenge import challenge_bp
+from .results import results_bp
+from .review import review_bp
 
 # IMPORTANT:
 # This file won't do much as of yet. This is a template I got just to act as a "scaffold",

@@ -6,7 +6,7 @@ import soundfile as sf
 import librosa
 import ffmpeg
 
-import noteUtils
+import .noteUtils
 
 
 

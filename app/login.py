@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, make_response
 from werkzeug.security import generate_password_hash
 
-from database import login as login_user  # Make sure this works from your project root
+from .database import login as login_user  # Make sure this works from your project root
 
 # Create a Blueprint for login
 login_bp = Blueprint('login', __name__)

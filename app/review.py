@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request
-from database import create_connection, DB_NAME, get_user_progress, get_user_notes_scores, get_grades_of_user
+from .database import create_connection, DB_NAME, get_user_progress, get_user_notes_scores, get_grades_of_user
 
 review_bp = Blueprint('review', __name__)
 

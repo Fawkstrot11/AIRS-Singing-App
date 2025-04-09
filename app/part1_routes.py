@@ -1,7 +1,7 @@
 import random
 import json
 from flask import Blueprint, render_template, request, redirect, url_for, make_response
-from part1 import execute as part1_execute  # Import your part1 execute function
+from .part1 import execute as part1_execute  # Import your part1 execute function
 
 part1_bp = Blueprint('part1', __name__)
 

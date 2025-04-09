@@ -1,8 +1,8 @@
 # picks the notes to be used for a tone sequence. should, at some point, be adaptive.
 import random
 import noteUtils
-from database import get_user_progress
-from noteUtils import note_name_to_hz
+from .database import get_user_progress
+from .noteUtils import note_name_to_hz
 
 
 def get_notes(sequence_length, lower_bound=40, upper_bound=80, step=1):

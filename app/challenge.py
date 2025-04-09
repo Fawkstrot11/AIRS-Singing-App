@@ -2,7 +2,7 @@ import time
 
 from flask import Blueprint, render_template, request, make_response, redirect
 import os
-from part2 import execute as part2_execute  # Import the part2 execute function
+from .part2 import execute as part2_execute  # Import the part2 execute function
 import json
 import subprocess
 

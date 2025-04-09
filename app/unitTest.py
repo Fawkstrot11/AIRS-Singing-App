@@ -1,13 +1,13 @@
-import unittest
-import inputGrader
-import inputProcessor
-import unittest
-import noteSelector
-import unittest
-import noteUtils
-import unittest
-import os
-import outputFormatter
+import .unittest
+import .inputGrader
+import .inputProcessor
+import .unittest
+import .noteSelector
+import .unittest
+import .noteUtils
+import .unittest
+import .os
+import .outputFormatter
 
 class TestOutputFormatter(unittest.TestCase):
 
