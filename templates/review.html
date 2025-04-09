@@ -1,0 +1,42 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="../static/js/themes.js"> </script>
+</head>
+<body>
+    <header>
+        <a href="../index">
+            <img src="{{ url_for('static', filename='images/homeArrow.png') }}" alt="Home" style = "max-width: 40px; margin-right: 96%; margin-top:6px;">
+        </a>
+        <h1 style="margin-top: -50px;">Review</h1>
+    </header>
+
+    <main>
+        <!--Little fixes to the positioning, might throw these into styles.css at some point.-->
+        <section>
+            <h1>Review your performance!</h1>
+            <h2>Statistics</h2>
+            <p><strong>Average Grade:</strong> {{ average_grade }}</p>
+            <p><strong>Preferred Note:</strong> {{ preferred_note }}</p>
+            <h2>Last 5 Exercises</h2>
+            <ul>
+                {% for exercise in five_last_exercises %}
+                    <li>{{ exercise }}</li>
+                {% else %}
+                    <li>No exercise found</li>
+                {% endfor %}
+            </ul>    
+            <p>
+                Press the button below or the arrow in the top-left to return to the home screen. 
+            </p>
+            <a href="../index">
+                <button>Proceed</button>
+            </a>
+        </section>
+    </main>
+
+</body>
+</html>

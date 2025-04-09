@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Template</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    
+    <script src="{{ url_for('static', filename='js/logger.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/unlogger.js') }}" defer></script>
+    <script src="../static/js/themes.js"> </script>
+
+</head>
+<body>
+    <script>
+        const message = "{{ alert_message }}";
+        if (message) {
+            alert(message);
+        }
+    </script>
+    <header>
+        <h1>Home
+        </h1>
+        <button id="logoutButton" onclick="deleteAllCookies()" class="logout-button">Log Out</button>
+
+
+    </header>
+
+    <main>
+        <!--Little fixes to the positioning, might throw these into styles.css at some point.-->
+
+        <section class="theMiddleBoxThings" style="padding-bottom: 50px;padding-top: 50px;">
+            <h2 style="font-size: 4vw;">Welcome to the AIRS Music App!</h2>
+            <p style="font-size: 2vw;color:rgb(105, 105, 105);">We're happy to have you.</p>
+        </section>
+
+        <!--I knew going into this that putting three images as hyperlinks next to each other would cause a migraine at some point,
+            so I figured out the lazy way of doing it. Work smarter, not harder.-->
+
+        <!--If we have time at the end, I could pretty these static-ass buttons up.-->
+
+        <img src="{{ url_for('static', filename='images/buttons.png') }}" alt="Selections" usemap="#choicemap" style="width: 80%;padding: 2%;">
+        <map name="choicemap">
+            <area shape="rect" coords="23,39,408,420" alt="Practice" href="{{ url_for('part1.start_challenge') }}">
+
+            <area shape="rect" coords="480,39,860,420" alt="Watch" href="{{ url_for('watch') }}">
+            <area shape="rect" coords="935,39,1315,420" alt="Review" href="{{ url_for('review.review') }}">
+        </map>
+    </main>
+
+</body>
+</html>

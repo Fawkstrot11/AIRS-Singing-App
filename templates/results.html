@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="../static/js/themes.js"> </script>
+</head>
+<body>
+    <header>
+	<a href = "../index">
+	    <img src="{{ url_for('static', filename='images/homeArrow.png') }}" alt="Home" style = "max-width: 40px; margin-right: 96%; margin-top:6px;">
+	</a>
+	<h1 style="margin-top: -5opx;">Review</h1>
+    </header>
+    <div style="width: 80%; height:60%; background-color:white; margin: 10px auto; display:flex; flex-direction: column; justify-content: center; align-items: center;">
+	<div class="image-container" style="display: flex; justify-content: center;">
+	    <img src="{{ url_for('serve_image', filename=request.cookies.get('temp_id') + '.png') }}" alt="Result Image" style="max-width: 80%; height: auto;">
+	</div>
+
+        <div class="score" style="margin-top: 10px; text-align: center;">
+	    <p> Score: {{ request.cookies.get('score') }} </p>
+	</div>
+    </div>
+</body>
+</html>

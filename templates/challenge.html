@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="../static/js/themes.js"> </script>
+</head>
+<body>
+    <header>
+        <h1>Audio Challenge</h1>
+    </header>
+
+    <main>
+        <section style="text-align:center;">
+            <h2>Listen to the audio and record your own</h2>
+            <!-- Play the initial audio file generated in part 1 -->
+            <audio controls>
+                <source src="{{ url_for('static', filename='audio/' + temp_id + '.wav') }}" type="audio/wav">
+                Your browser does not support the audio element.
+            </audio>
+        </section>
+
+  <form id="audio-form" method="POST" enctype="multipart/form-data">
+    <input type="file" id="user_audio" name="user_audio" hidden>
+    <button type="button" id="record-btn">Start Recording</button>
+  </form>
+
+  <script>
+    let mediaRecorder;
+    let audioChunks = [];
+    let isRecording = false;
+
+    const recordBtn = document.getElementById('record-btn');
+    const audioInput = document.getElementById('user_audio');
+    const form = document.getElementById('audio-form');
+
+    recordBtn.addEventListener('click', async () => {
+      if (!isRecording) {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+          mediaRecorder = new MediaRecorder(stream, {
+            mimeType: 'audio/webm'
+          });
+
+          audioChunks = [];
+
+          mediaRecorder.ondataavailable = event => {
+            if (event.data.size > 0) {
+              audioChunks.push(event.data);
+            }
+          };
+
+          mediaRecorder.onstop = () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            const file = new File([audioBlob], 'recording.webm', { type: 'audio/webm' });
+
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            audioInput.files = dataTransfer.files;
+
+            form.submit();
+          };
+
+          mediaRecorder.start();
+          isRecording = true;
+          recordBtn.textContent = 'Stop Recording';
+        } catch (err) {
+          console.error('Microphone access error:', err);
+          alert('Unable to access microphone.');
+        }
+      } else {
+        mediaRecorder.stop();
+        isRecording = false;
+        recordBtn.textContent = 'Start Recording';
+      }
+    });
+  </script>
+
+</body>
+</html>
