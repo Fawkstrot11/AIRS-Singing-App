@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Sign Up</h1>
+    </header>
+
+    <main>
+        <section style="padding-bottom: 50px;padding-top: 50px;background-color: rgba(219, 219, 219, 0.795);">
+            <h2 style="font-size: 64px;">Create a New Account</h2>
+            <p style="font-size: 32px;color:rgb(105, 105, 105);">Fill in the details to sign up.</p>
+        </section>
+
+        <form action="/signup" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <!-- Can Uncomment to allow users to pick theme-->
+            <!-- <label for="theme">Theme:</label>
+            <select id="theme" name="theme">
+                <option value="standard">Standard</option>
+                <option value="princess">Princess</option>
+                <option value="Rock">Rock</option>
+            </select> -->
+
+            <button type="submit">Sign Up</button>
+        </form>
+
+        {% if error %}
+            <p style="color: red;">{{ error }}</p>
+        {% endif %}
+    </main>
+</body>
+</html>
