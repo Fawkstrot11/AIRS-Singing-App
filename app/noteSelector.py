@@ -1,5 +1,5 @@
 # picks the notes to be used for a tone sequence. should, at some point, be adaptive.
-from . import random
+import random
 from . import noteUtils
 from .database import get_user_progress
 from .noteUtils import note_name_to_hz
