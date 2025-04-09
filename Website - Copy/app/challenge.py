@@ -8,7 +8,6 @@ import subprocess
 
 def convert_webm_to_wav(webm_path, wav_path):
     try:
-        ffmpeg_path = "../ffmpeg-master-latest-win64-gpl-shared/bin/ffmpeg.exe"  # Update path as needed
         command = [ffmpeg_path, '-y', '-i', webm_path, wav_path]
         subprocess.run(command, check=True)
         print(f"Conversion successful: {wav_path}")
