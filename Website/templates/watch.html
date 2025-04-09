@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Template</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+
+          padding: 20px;
+        }
+        select {
+          padding: 8px;
+          font-size: 16px;
+        }
+        .video-container {
+          display: none;
+          margin-top: 20px;
+        }
+        .video-container.active {
+          display: block;
+        }
+        iframe {
+          width: 100%;
+          max-width: 640px;
+          height: 360px;
+          border: none;
+        }
+      </style>
+      <script src="../static/js/themes.js"></script>
+</head>
+<body>
+    <header>
+        <a href="index">
+            <img src="{{ url_for('static', filename='images/homeArrow.png') }}" alt="Home" style="max-width: 40px;margin-right: 96%;margin-top: 6px;">
+        </a>
+        <h1 style="margin-top: -50px;">Motivational Archive
+        </h1>
+    </header>
+
+    <main>
+        <!--Little fixes to the positioning, might throw these into styles.css at some point.-->
+        <section>
+            <body>
+
+                <h2>Select a Video:</h2>
+                <select id="videoSelector">
+                  <option value="">-- Choose a video --</option>
+                  <option value="video1">Taylor Swift Interview</option>
+                  <option value="video2">American Idol Winner</option>
+                  <option value="video3">Career Opportunities</option>
+                </select>
+              
+                <div id="video1" class="video-container">
+                  <iframe src="https://www.youtube.com/embed/ULgGwEdlZNc" allowfullscreen></iframe>
+                </div>
+              
+                <div id="video2" class="video-container">
+                  <iframe src="https://www.youtube.com/embed/EWkT25wIEJs" allowfullscreen></iframe>
+                </div>
+              
+                <div id="video3" class="video-container">
+                  <iframe src="https://www.youtube.com/embed/vDU5VwszYHM" allowfullscreen></iframe>
+                </div>
+              
+                <script>
+                  const selector = document.getElementById('videoSelector');
+                  const containers = document.querySelectorAll('.video-container');
+              
+                  selector.addEventListener('change', function () {
+                    containers.forEach(container => container.classList.remove('active'));
+                    const selectedId = this.value;
+                    if (selectedId) {
+                      const selectedVideo = document.getElementById(selectedId);
+                      if (selectedVideo) selectedVideo.classList.add('active');
+                    }
+                  });
+                </script>
+              </body>
+        </section>
+        <select id="theme-switcher" style="margin: 10px;">
+            <option value="standard">Standard</option>
+            <option value="princess">Princess</option>
+            <option value="rock">Rock</option>
+            <!-- Add more options as needed -->
+        </select>
+        <script>
+            // Set the dropdown value to the current cookie
+            function getCookie(name) {
+                const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+                return match ? decodeURIComponent(match[2]) : null;
+            }
+        
+            const switcher = document.getElementById("theme-switcher");
+            const currentStyle = getCookie("style") || "standard";
+            switcher.value = currentStyle;
+        
+            switcher.addEventListener("change", function () {
+                document.cookie = `style=${this.value}; path=/; max-age=31536000`; // 1 year
+                location.reload();
+            });
+        </script>
+                
+    </main>
+
+</body>
+</html>
