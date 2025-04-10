@@ -3,7 +3,18 @@ DOCUMENTATION:
 The AIRS singing app is a web-based Flask server, with backend written in Python and an SQLite3 database. This document will tell you everything you need to know about deploying, using, upkeeping, and modifying the application.
 
 - DEPLOYMENT:
-tba
+Flask apps are suprisingly *particular* about their deployment. Not hard, but particular. We used PythonAnywhere, which is cheap and robust. Many other options exist but most of them don't allow the use of SQL Databases. Deployment is simple; git pull into the console, then set the WSGI configuration to this:
+
+import sys
+
+if path not in sys.path:
+    sys.path.append(path)
+import database
+database.setup()
+
+from app import app as application
+You can generate a venv from the requirements.txt, but be careful, as it's a little finnicky. You may have to uninstall and reinstall a couple libraries.
+
 
 - USING:
 Once deployed, the application is accessible through the web. There are 3 buttons visible, for three main options:
@@ -14,6 +25,10 @@ Once deployed, the application is accessible through the web. There are 3 button
 The site is account-based- users carry progression accross devices, and all sequences are saved to their account for easy analysis. Note that while there is no native password recovery feature, passwords can be manually updated from the database if needed. The easiest way is to use the werkzeug.security.generate_password_hash(password_here) function in python, then copy/paste the output in the user's password field with an SQLite editor of your choice. You *can* do this via provided Database methods but it's likely more complicated than it's worth.
 
 User profiles consist of 4 major elements: an ID, a name, a password, and a *theme*. This determines the style used on the website- a feature requested by clients in order to a/b test different demographics. Three exist by default: "standard", "princess", and "rock". By default, the user's theme is randomly generated when the account is created (with a bias to standard), but this can be easily changed. Sample code is left commented in the code to allow the user to select their own theme at creation.
+
+Audio input is handled locally in the website, then handed to the backend to be manipulated in a number of ways. 
+
+**IMPORTANT: Note that some mobile phones do not like the current deployment, as it lacks an HTTPS certificate. They do not like to send audio without it. This is an easy fix, but an HTTPS certificate is not cheap, and I did not want to pay for it if it was not going to be needed immediately.**
 
 - UPKEEP:
 The server requires minimal manual upkeep. When you wish to access the data, simply download it from the source it is deployed from. SQLite3 Databases are simple to navigate, and a number of tools exist that can assist in analysis. They can also be converted into a CSV, to analyize in a Spreadsheet-like form.
