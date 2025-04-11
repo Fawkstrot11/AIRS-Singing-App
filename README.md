@@ -26,7 +26,7 @@ The site is account-based- users carry progression accross devices, and all sequ
 
 User profiles consist of 4 major elements: an ID, a name, a password, and a *theme*. This determines the style used on the website- a feature requested by clients in order to a/b test different demographics. Three exist by default: "standard", "princess", and "rock". By default, the user's theme is randomly generated when the account is created (with a bias to standard), but this can be easily changed. Sample code is left commented in the code to allow the user to select their own theme at creation.
 
-Audio input is handled locally in the website, then handed to the backend to be manipulated in a number of ways. 
+Audio input is handled locally in the website, using the built-in functions of the browser itself. It is then handed to challenge.py, which converts it into a .wav file and then then hands it to part2.py for processing and grading. 
 
 **IMPORTANT: Note that some mobile phones do not like the current deployment, as it lacks an HTTPS certificate. They do not like to send audio without it. This is an easy fix, but an HTTPS certificate is not cheap, and I did not want to pay for it if it was not going to be needed immediately.**
 
